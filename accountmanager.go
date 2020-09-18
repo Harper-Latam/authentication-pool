@@ -2,8 +2,9 @@ package authentication_pool
 
 import (
 	"errors"
-	"github.com/lapix-com-co/authentication-pool/codes"
 	"sync"
+
+	"github.com/Harper-Latam/authentication-pool/codes"
 )
 
 type TemplateName string

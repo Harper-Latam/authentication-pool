@@ -1,4 +1,4 @@
-module github.com/lapix-com-co/authentication-pool
+module github.com/Harper-Latam/authentication-pool
 
 go 1.13
 

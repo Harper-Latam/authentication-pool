@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/google/uuid"
-	"github.com/lapix-com-co/authentication-pool/random"
+	"github.com/Harper-Latam/authentication-pool/random"
 	"github.com/pascaldekloe/jwt"
 	"strings"
 	"time"

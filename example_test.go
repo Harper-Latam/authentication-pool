@@ -3,7 +3,7 @@ package authentication_pool
 import (
 	"crypto/ed25519"
 	"fmt"
-	"github.com/lapix-com-co/authentication-pool/codes"
+	"github.com/Harper-Latam/authentication-pool/codes"
 	"strings"
 	"time"
 )
