@@ -5,6 +5,7 @@ type ProviderName string
 const (
 	Google   ProviderName = "google"
 	Facebook              = "facebook"
+	Apple                 = "apple"
 	Local                 = "local"
 )
 
