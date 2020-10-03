@@ -47,9 +47,7 @@ func (h applePeople) GetUser(accessToken string) (user *AppleUser, err error) {
 	if err != nil {
 		return nil, err
 	}
-	user.ID = ID
-	user.Email = email
-	fmt.Println(user)
+	user = &AppleUser{ID: ID, Email: email}
 	return user, nil
 }
 
