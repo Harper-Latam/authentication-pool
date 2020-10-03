@@ -47,10 +47,10 @@ func (h applePeople) GetUser(accessToken string) (user *AppleUser, err error) {
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println(ID + "\n" + email)
 	user.ID = ID
 	user.Email = email
-	return user, err
+	fmt.Println(user)
+	return user, nil
 }
 
 // Retrieve get info from User (sub, email)
@@ -60,7 +60,10 @@ func (f AppleProvider) Retrieve(input *ValidationInput) (*ValidationOutput, erro
 	if err != nil {
 		return nil, err
 	}
-
+	fmt.Println(user.ID)
+	fmt.Println(splitInput[1])
+	fmt.Println(splitInput[2])
+	fmt.Println(splitInput[0])
 	return &ValidationOutput{
 		ID:             user.ID,
 		FirstName:      splitInput[1],
