@@ -1,15 +1,24 @@
 package authentication_pool
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"net/http"
+	"strings"
+
+	"github.com/tideland/gorest/jwt"
 )
 
 //AppleProvider struct
 type AppleProvider struct {
 	api appleAPI
+}
+
+//AppleUser struct
+type AppleUser struct {
+	ID        string `json:"sub"`
+	FirstName string `json:"given_name"`
+	LastName  string `json:"family_name"`
+	Email     string `json:"email"`
+	Picture   string `json:"picture"`
 }
 
 // NewAppleProvider , return AppleProvider struct pointer
@@ -23,46 +32,30 @@ type appleAPI interface {
 
 type applePeople struct{}
 
+// GetClaims decodes the data response and returns the data to identify the user
+func GetClaims(idToken string) (string, string, error) {
+	j, err := jwt.Decode(idToken)
+	if err != nil {
+		return "", "", err
+	}
+	return fmt.Sprintf("%v", j.Claims()["sub"]), fmt.Sprintf("%v", j.Claims()["email"]), nil
+}
+
+// GetUser get info from User (sub, email)
 func (h applePeople) GetUser(accessToken string) (user *AppleUser, err error) {
-	//url := fmt.Sprintf("https://appleid.apple.com/auth/authorize?client_id=%s", accessToken)
-	url := fmt.Sprintf("https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=%s", accessToken)
-	res, err := http.Get(url)
-
+	ID, email, err := GetClaims(accessToken)
 	if err != nil {
 		return nil, err
 	}
-
-	defer res.Body.Close()
-	data, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	if res.StatusCode != 200 {
-		if res.StatusCode == 400 {
-			return nil, fmt.Errorf("the given token is not valid")
-		}
-
-		return nil, NewProviderError(err, "invalid response from server. Please try again")
-	}
-
-	user = &AppleUser{}
-	if err = json.Unmarshal(data, user); err != nil {
-		return nil, err
-	}
-
+	fmt.Println(ID + "\n" + email)
+	user.ID = ID
+	user.Email = email
 	return user, err
 }
 
-type AppleUser struct {
-	ID        string `json:"sub"`
-	FirstName string `json:"given_name"`
-	LastName  string `json:"family_name"`
-	Email     string `json:"email"`
-	Picture   string `json:"picture"`
-}
-
+// Retrieve get info from User (sub, email)
 func (f AppleProvider) Retrieve(input *ValidationInput) (*ValidationOutput, error) {
+	splitInput := strings.Split(input.Email, "*")
 	user, err := f.api.GetUser(input.Secret)
 	if err != nil {
 		return nil, err
@@ -70,14 +63,15 @@ func (f AppleProvider) Retrieve(input *ValidationInput) (*ValidationOutput, erro
 
 	return &ValidationOutput{
 		ID:             user.ID,
-		FirstName:      user.FirstName,
-		LastName:       user.LastName,
-		Email:          user.Email,
-		PhotoURL:       &user.Picture,
+		FirstName:      splitInput[1],
+		LastName:       splitInput[2],
+		Email:          splitInput[0],
+		PhotoURL:       nil,
 		EmailValidated: true,
 	}, nil
 }
 
+// Name provider auth
 func (f AppleProvider) Name() string {
 	return "apple"
 }

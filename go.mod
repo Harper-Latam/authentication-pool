@@ -10,6 +10,8 @@ require (
 	github.com/huandu/facebook v2.3.1+incompatible
 	github.com/pascaldekloe/jwt v1.7.0
 	github.com/stretchr/testify v1.4.0
+	github.com/tideland/golib v4.24.2+incompatible // indirect
+	github.com/tideland/gorest v2.15.5+incompatible
 	go.opencensus.io v0.22.2 // indirect
 	golang.org/x/crypto v0.0.0-20191227163750-53104e6ec876
 	golang.org/x/net v0.0.0-20191209160850-c0dbc17a3553 // indirect
