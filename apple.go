@@ -58,10 +58,6 @@ func (f AppleProvider) Retrieve(input *ValidationInput) (*ValidationOutput, erro
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println(user.ID)
-	fmt.Println(splitInput[1])
-	fmt.Println(splitInput[2])
-	fmt.Println(splitInput[0])
 	return &ValidationOutput{
 		ID:             user.ID,
 		FirstName:      splitInput[1],
