@@ -397,6 +397,10 @@ type VerifyInput struct {
 	Token string
 }
 
+func NewVerifyInput(token string) *VerifyInput {
+	return &VerifyInput{token}
+}
+
 type VerifyOutput struct {
 	ExpiredAt        time.Time
 	RegisteredClaims *RegisteredClaims

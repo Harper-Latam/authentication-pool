@@ -4,11 +4,12 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
-	"github.com/google/uuid"
-	"github.com/Harper-Latam/authentication-pool/random"
-	"github.com/pascaldekloe/jwt"
 	"strings"
 	"time"
+
+	"github.com/Harper-Latam/authentication-pool/random"
+	"github.com/google/uuid"
+	"github.com/pascaldekloe/jwt"
 )
 
 type JWTTokenProvider struct {
@@ -288,6 +289,25 @@ func (p PascalDeKloeJWTHandler) Verify(input *VerifyInput) (*VerifyOutput, error
 		},
 		PrivateClaims: &PrivateClaims{},
 	}, nil
+}
+
+// GetClaims generic Verify Token for several algorithms and returns Claims Object
+func (p PascalDeKloeJWTHandler) GetClaims(input *VerifyInput) (claims *jwt.Claims, err error) {
+
+	switch p.algorithm {
+	case "HMAC":
+		claims, err = jwt.HMACCheck([]byte(input.Token), p.privateKey)
+	case "EdDSA":
+		claims, err = jwt.HMACCheck([]byte(input.Token), p.publicKey)
+	default:
+		return nil, errors.New("the given algorithm does not exist")
+	}
+
+	if err != nil {
+		return nil, ErrInvalidToken
+	}
+
+	return claims, nil
 }
 
 type ObscureVerifyTokenInput struct {
